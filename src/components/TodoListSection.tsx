@@ -4,8 +4,8 @@ import { CreateTodoAction } from "../actions/CreateTodoAction";
 import { ToggleTodoAction } from "../actions/ToggleTodoAction";
 import { UpdateTodoAction } from "../actions/UpdateTodoAction";
 import { DeleteTodoAction } from "../actions/DeleteTodoAction";
-import { useTags } from "../hooks/useTags";
 import { DateTime } from "luxon";
+import { useTags } from "../contexts/TagsContext";
 
 type Props = {
   title: string;
@@ -25,7 +25,6 @@ export const TodoListSection = ({ title, todos, onCreate, toggleTodo, onUpdate, 
           key={todo.id}
           title={todo.title}
           subtitle={todo.description}
-          //TODO: restart local storage
           accessories={[
             ...(todo.completedAt
               ? [
@@ -34,7 +33,7 @@ export const TodoListSection = ({ title, todos, onCreate, toggleTodo, onUpdate, 
                   },
                 ]
               : []),
-            ...(todo.tags ?? []).map((tagId) => {
+            ...todo.tags.map((tagId) => {
               const tag = tags.find((tag) => tag.id === tagId)!;
               if (!tag)
                 return {
@@ -48,7 +47,6 @@ export const TodoListSection = ({ title, todos, onCreate, toggleTodo, onUpdate, 
               };
             }),
           ]}
-          // accessories={[{ text: todo.completedAt ? DateTime.fromISO(todo.completedAt).toFormat("dd MMM, hh:mm") : "" }]}
           icon={todo.completedAt ? Icon.CheckCircle : Icon.Circle}
           actions={
             <ActionPanel>

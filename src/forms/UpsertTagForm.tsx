@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Color, Form, Icon, useNavigation } from "@raycast/api";
 import { CreateTagPayload, Tag, UpdateTagPayload } from "../models";
 
-type Props =
+export type UpsertTagFormProps =
   | {
       targetTag: Tag;
       onSave: (input: UpdateTagPayload) => void;
@@ -11,7 +11,7 @@ type Props =
       targetTag: null;
     };
 
-export const UpsertTagForm = ({ onSave, targetTag }: Props) => {
+export const UpsertTagForm = ({ onSave, targetTag }: UpsertTagFormProps) => {
   const navigation = useNavigation();
   return (
     <Form

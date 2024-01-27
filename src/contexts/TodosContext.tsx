@@ -1,9 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from "react";
 import { CreateTodoPayload, Todo, UpdateTodoPayload } from "../models";
 import { LocalStorage } from "@raycast/api";
 import { nanoid } from "nanoid";
 
-export const useTodos = () => {
+type TodosContextData = {
+  todos: Todo[];
+  toggleTodo: (id: string) => void;
+  onCreate: (input: CreateTodoPayload) => void;
+  onUpdate: (input: UpdateTodoPayload) => void;
+  onDelete: (id: string) => void;
+};
+
+export const TodosContext = createContext<TodosContextData | null>(null);
+
+export const TodosContextProvider = ({ children }: PropsWithChildren) => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const didInitialLoad = useRef<boolean>();
 
@@ -80,11 +90,26 @@ export const useTodos = () => {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
-  return {
-    todos,
-    toggleTodo,
-    onCreate,
-    onUpdate,
-    onDelete,
-  };
+  return (
+    <TodosContext.Provider
+      value={{
+        todos,
+        toggleTodo,
+        onCreate,
+        onUpdate,
+        onDelete,
+      }}
+    >
+      {children}
+    </TodosContext.Provider>
+  );
+};
+
+export const useTodos = () => {
+  const context = useContext(TodosContext);
+  if (!context) {
+    throw new Error("useTodos must be used within a TodosContextProvider");
+  }
+
+  return context;
 };

@@ -1,8 +1,3 @@
-import { UpsertTodoForm } from "./forms/UpsertTodoForm";
-import { useTodos } from "./hooks/useTodos";
+import CreateTodoSCreen from "./screens/CreateTodoScreen";
 
-export default function CreateTodoCommand() {
-  const { onCreate } = useTodos();
-
-  return <UpsertTodoForm onSave={onCreate} targetTodo={null} />;
-}
+export default CreateTodoSCreen;

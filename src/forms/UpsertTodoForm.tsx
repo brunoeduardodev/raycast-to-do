@@ -1,9 +1,9 @@
 import { Action, ActionPanel, Form, Icon, useNavigation } from "@raycast/api";
-import { CreateTodoPayload, Todo, UpdateTodoPayload } from "../models";
-import { useTags } from "../hooks/useTags";
+import { CreateTodoPayload, Tag, Todo, UpdateTodoPayload } from "../models";
 import { CreateTagAction } from "../actions/CreateTagAction";
+import { useTags } from "../contexts/TagsContext";
 
-type Props =
+export type UpsertTodoFormProps =
   | {
       targetTodo: Todo;
       onSave: (input: UpdateTodoPayload) => void;
@@ -13,7 +13,7 @@ type Props =
       targetTodo: null;
     };
 
-export const UpsertTodoForm = ({ onSave, targetTodo }: Props) => {
+export const UpsertTodoForm = ({ onSave, targetTodo }: UpsertTodoFormProps) => {
   const { tags, isLoading, ...actions } = useTags();
   const navigation = useNavigation();
 

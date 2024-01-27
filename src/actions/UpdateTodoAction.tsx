@@ -1,6 +1,6 @@
 import { Action, Icon } from "@raycast/api";
 import { Todo, UpdateTodoPayload } from "../models";
-import { UpsertTodoForm } from "../forms/UpsertTodoForm";
+import { UpsertTodoScreen } from "../screens/UpsertTodoScreen";
 
 type Props = {
   todo: Todo;
@@ -10,7 +10,7 @@ export const UpdateTodoAction = ({ onUpdate, todo }: Props) => {
   return (
     <Action.Push
       title="Update Todo"
-      target={<UpsertTodoForm onSave={onUpdate} targetTodo={todo} />}
+      target={<UpsertTodoScreen onSave={onUpdate} targetTodo={todo} />}
       shortcut={{ modifiers: ["cmd"], key: "e" }}
       icon={Icon.Pencil}
     />

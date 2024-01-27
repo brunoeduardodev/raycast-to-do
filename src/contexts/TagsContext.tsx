@@ -1,9 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from "react";
 import { CreateTagPayload, Tag, UpdateTagPayload } from "../models";
 import { LocalStorage } from "@raycast/api";
 import { nanoid } from "nanoid";
 
-export const useTags = () => {
+type TagsContextData = {
+  tags: Tag[];
+  onCreate: (input: CreateTagPayload) => void;
+  onUpdate: (input: UpdateTagPayload) => void;
+  onDelete: (id: string) => void;
+  isLoading: boolean;
+};
+
+export const TagsContext = createContext<TagsContextData | null>(null);
+
+export const TagsContextProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
   const [tags, setTags] = useState<Tag[]>([]);
   const didInitialLoad = useRef<boolean>();
@@ -66,11 +76,26 @@ export const useTags = () => {
     setTags((prevTags) => prevTags.filter((tag) => tag.id !== id));
   };
 
-  return {
-    tags,
-    onCreate,
-    onUpdate,
-    onDelete,
-    isLoading,
-  };
+  return (
+    <TagsContext.Provider
+      value={{
+        tags,
+        onCreate,
+        onUpdate,
+        onDelete,
+        isLoading,
+      }}
+    >
+      {children}
+    </TagsContext.Provider>
+  );
+};
+
+export const useTags = () => {
+  const context = useContext(TagsContext);
+  if (!context) {
+    throw new Error("useTags must be used within a TagsContextProvider");
+  }
+
+  return context;
 };
